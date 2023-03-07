@@ -1,0 +1,8 @@
+__pycache__
+html/
+.idea/
+venv/
+**/htmlcov
+.coverage
+.project
+.pydevproject
