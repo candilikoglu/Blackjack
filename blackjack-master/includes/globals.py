@@ -52,6 +52,8 @@ DOUBLE_DOWN_BUTTON_FILENAME_ON = "doubledown_button_blue.xcf"
 DOUBLE_DOWN_BUTTON_FILENAME_OFF = "doubledown_button_blue_fade.xcf"
 UNDO_BET_BUTTON_FILENAME_ON = "undobet_button_blue.xcf"
 UNDO_BET_BUTTON_FILENAME_OFF = "undobet_button_blue_fade.xcf"
+HELP_BUTTON_FILENAME_ON = "help_button_blue.xcf"
+
 
 # All chips images
 CHIP_5_FILENAME_ON = "chip_5_w85h85.xcf"
@@ -75,6 +77,7 @@ YELLOW_COLOR = (255, 255, 0)
 
 # Size, positions and gaps between objects on the game board
 GAME_BOARD_SIZE = (1400, 900)
+STRATEGY_CARD_SIZE = (500, 621)
 GAME_BOARD_X_SIZE = GAME_BOARD_SIZE[0]#0
 GAME_BOARD_Y_SIZE = GAME_BOARD_SIZE[1]#1
 PLAYER_CARD_START_POS = (175, 500)

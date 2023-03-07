@@ -69,6 +69,32 @@ class InitialState(State):
                                     'second_hand_push': False,
                                     'second_hand_lose': False,
                                     'second_hand_busted': False}
+        
+        # Create instance for pressing button
+        button_collide_instance = ButtonCollideArea.get_instance(common_vars)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                common_vars.done = True
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                mouse_position = pygame.mouse.get_pos()
+                # Allow help button to be pressed during instance
+                if button_status.help and button_collide_instance.help_button_area.\
+                                collidepoint(mouse_position[0], mouse_position[1]):
+                            
+                            scrn = pygame.display.set_mode(STRATEGY_CARD_SIZE)
+                            pygame.display.set_caption('image')
+                            imp = pygame.image.load(IMAGE_PATH + "strategy_card.xcf")
+                            imp = pygame.transform.scale(imp, (STRATEGY_CARD_SIZE))
+                            scrn.blit(imp, (0, 0))
+                            pygame.display.flip()
+                            status = True
+                            while (status):
+                                for i in pygame.event.get():
+                                    if i.type == pygame.QUIT:
+                                        status = False
+                            # Return screen to original size
+                            scrn = pygame.display.set_mode(GAME_BOARD_SIZE)
+                            
         common_vars.player_hands = []
         hand_instance = []
         common_vars.player_hands.append(hand_instance)
@@ -166,6 +192,20 @@ class BettingState(State):
                         common_vars.player_cash += self._current_bet.pop()
                         logging.info(type(self).__name__ + ': [Undo bet] pressed, remaining credits {0}'.
                                      format(common_vars.player_cash))
+                    elif button_status.help and button_collide_instance.help_button_area.\
+                            collidepoint(mouse_position[0], mouse_position[1]):
+                        scrn = pygame.display.set_mode(STRATEGY_CARD_SIZE)
+                        pygame.display.set_caption('image')
+                        imp = pygame.image.load(IMAGE_PATH + "strategy_card.xcf")
+                        imp = pygame.transform.scale(imp, (STRATEGY_CARD_SIZE))
+                        scrn.blit(imp, (0, 0))
+                        pygame.display.flip()
+                        status = True
+                        while (status):
+                            for i in pygame.event.get():
+                                if i.type == pygame.QUIT:
+                                    status = False
+                        scrn = pygame.display.set_mode(GAME_BOARD_SIZE)
 
                     if len(self._current_bet) < 14:
                         self._chips_visible = True
@@ -348,6 +388,23 @@ class DealingState(State):
                     button_status.reset()
                     logging.info(type(self).__name__ + ': Remaining credits {0}'.format(common_vars.player_cash))
                     self.next_state(SplitState)
+                elif button_status.help and button_collide_instance.help_button_area.\
+                        collidepoint(mouse_position[0], mouse_position[1]):
+                    scrn = pygame.display.set_mode(STRATEGY_CARD_SIZE)
+                    pygame.display.set_caption('image')
+                    imp = pygame.image.load(IMAGE_PATH + "strategy_card.xcf")
+
+                    imp = pygame.transform.scale(imp, (STRATEGY_CARD_SIZE))
+
+                    scrn.blit(imp, (0, 0))
+                    pygame.display.flip()
+                    status = True
+                    while (status):
+                        for i in pygame.event.get():
+                            if i.type == pygame.QUIT:
+                                status = False
+                    scrn = pygame.display.set_mode(GAME_BOARD_SIZE)
+                    #scrn = pygame.display.set_mode((800, 600))
 
         plot_bets(common_vars.screen, common_vars.player_bets)
 
@@ -404,6 +461,27 @@ class SplitState(State):
         logging.info(type(self).__name__ + ': {0}:{1}'.
                      format(len(common_vars.player_hands[first_hand]),
                             len(common_vars.player_hands[second_hand])))
+        button_collide_instance = ButtonCollideArea.get_instance(common_vars)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                common_vars.done = True
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                mouse_position = pygame.mouse.get_pos()
+                if button_status.help and button_collide_instance.help_button_area.\
+                                collidepoint(mouse_position[0], mouse_position[1]):
+                            scrn = pygame.display.set_mode(STRATEGY_CARD_SIZE)
+                            pygame.display.set_caption('image')
+                            imp = pygame.image.load(IMAGE_PATH + "strategy_card.xcf")
+                            imp = pygame.transform.scale(imp, (STRATEGY_CARD_SIZE))
+
+                            scrn.blit(imp, (0, 0))
+                            pygame.display.flip()
+                            status = True
+                            while (status):
+                                for i in pygame.event.get():
+                                    if i.type == pygame.QUIT:
+                                        status = False
+                            scrn = pygame.display.set_mode(GAME_BOARD_SIZE)
 
         if len(common_vars.player_hands[second_hand]) != 2:
             # Fill up each hand with one additional card
@@ -593,6 +671,21 @@ class PlayerHitState(State):
                         else:
                             self._current_hand = 0
                             self.next_state(DealerInitState)
+                    elif button_status.help and button_collide_instance.help_button_area.\
+                            collidepoint(mouse_position[0], mouse_position[1]):
+                        scrn = pygame.display.set_mode(STRATEGY_CARD_SIZE)
+                        pygame.display.set_caption('image')
+                        imp = pygame.image.load(IMAGE_PATH + "strategy_card.xcf")
+                        imp = pygame.transform.scale(imp, (STRATEGY_CARD_SIZE))
+
+                        scrn.blit(imp, (0, 0))
+                        pygame.display.flip()
+                        status = True
+                        while (status):
+                            for i in pygame.event.get():
+                                if i.type == pygame.QUIT:
+                                    status = False
+                        scrn = pygame.display.set_mode(GAME_BOARD_SIZE)
 
         plot_bets(common_vars.screen, common_vars.player_bets)
 

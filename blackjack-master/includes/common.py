@@ -260,6 +260,10 @@ def plot_buttons(screen, button_status):
                     (button_x_pos - 120, button_y_pos - 80))
     button_x_pos += GAP_BETWEEN_BUTTONS
 
+    if button_status.help is True:
+        screen.blit(image_db.get_image(IMAGE_PATH_BUTTONS + HELP_BUTTON_FILENAME_ON),
+                    (button_x_pos - 103, button_y_pos - 7))
+
 
 # def plot_status_box(screen, text_font, player_cash, game_rounds):
 #     account_text = text_font.render('Credits: {0}, Rounds: {1}'.format(player_cash, game_rounds), False, YELLOW_COLOR)
@@ -662,6 +666,11 @@ class ButtonCollideArea:
                                                    button_y_pos - 80,
                                                    common_vars.button_image_width,
                                                    common_vars.button_image_height)
+        button_x_pos += GAP_BETWEEN_BUTTONS
+        self.help_button_area = pygame.Rect(button_x_pos - 103,
+                                                   button_y_pos - 7,
+                                                   common_vars.button_image_width,
+                                                   common_vars.button_image_height)
 
 
 class ChipsCollideArea:
@@ -797,6 +806,7 @@ class ButtonStatus:
     def __init__(self):
         """
         Instantiate a singleton object with all attributes set to False.
+        Help button always available
 
         """
         self.start = False
@@ -806,10 +816,12 @@ class ButtonStatus:
         self.stand = False
         self.split = False
         self.double_down = False
+        self.help = True
 
     def reset(self):
         """
         Set all class attributes value to False.
+        Help button always available
 
         :return: None
 
@@ -821,3 +833,4 @@ class ButtonStatus:
         self.stand = False
         self.split = False
         self.double_down = False
+        self.help = True
