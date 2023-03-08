@@ -590,9 +590,9 @@ class PlayerHitState(State):
         if num_of_hands == 2:
             image_db = ImageDB.get_instance()
             if self._current_hand == 0:
-                common_vars.screen.blit(image_db.get_image(IMAGE_PATH + 'hand.png'), (185, 200))
+                common_vars.screen.blit(image_db.get_image(IMAGE_PATH + 'hand.png'), (200, 400))
             else:
-                common_vars.screen.blit(image_db.get_image(IMAGE_PATH + 'hand.png'), (185 + GAP_BETWEEN_SPLIT, 200))
+                common_vars.screen.blit(image_db.get_image(IMAGE_PATH + 'hand.png'), (200 + GAP_BETWEEN_SPLIT, 400))
 
         value_of_players_hand = get_value_of_players_hand(common_vars.player_hands[self._current_hand])
         if value_of_players_hand > 21:
