@@ -262,7 +262,7 @@ def plot_buttons(screen, button_status):
 
     if button_status.help is True:
         screen.blit(image_db.get_image(IMAGE_PATH_BUTTONS + HELP_BUTTON_FILENAME_ON),
-                    (button_x_pos - 103, button_y_pos - 7))
+                    (button_x_pos - 105, button_y_pos - 15))
 
 
 # def plot_status_box(screen, text_font, player_cash, game_rounds):

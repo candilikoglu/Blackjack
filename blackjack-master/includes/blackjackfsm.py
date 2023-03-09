@@ -106,16 +106,6 @@ class InitialState(State):
         button_status.reset()
         self.next_state(BettingState)
 
-# class StartGame(State):
-#     def __call__(self, common_vars, button_status):
-#         """
-
-#         :param common_vars:
-#         :param button_status:
-#         :return: None
-
-#         """
-#         logging.debug(type(self).__name__ + ':' + 'enter')
         
 class BettingState(State):
     """
@@ -590,9 +580,9 @@ class PlayerHitState(State):
         if num_of_hands == 2:
             image_db = ImageDB.get_instance()
             if self._current_hand == 0:
-                common_vars.screen.blit(image_db.get_image(IMAGE_PATH + 'hand.png'), (200, 400))
+                common_vars.screen.blit(image_db.get_image(IMAGE_PATH + 'hand.png'), (200, 700))
             else:
-                common_vars.screen.blit(image_db.get_image(IMAGE_PATH + 'hand.png'), (200 + GAP_BETWEEN_SPLIT, 400))
+                common_vars.screen.blit(image_db.get_image(IMAGE_PATH + 'hand.png'), (200 + GAP_BETWEEN_SPLIT, 700))
 
         value_of_players_hand = get_value_of_players_hand(common_vars.player_hands[self._current_hand])
         if value_of_players_hand > 21:

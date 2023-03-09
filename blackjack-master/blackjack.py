@@ -20,6 +20,7 @@ from includes.blackjackfsm import *
 # import sys
 # MAIN_DIR = (os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # sys.path.insert(1, os.path.join(MAIN_DIR, 'lib'))
+
 __name__ = "__mainMenu__"
 class mainMenu():
 
@@ -27,34 +28,35 @@ class mainMenu():
     pygame.font.init()
     import pygame 
     pygame.init()
+    image_db = ImageDB.get_instance()
 
     screen = pygame.display.set_mode(GAME_BOARD_SIZE)
-    # white color
-    color = (255,255,255)
+
+    color = (0, 0, 0)
     # light shade of the button
     color_light = (170,170,170)
     # dark shade of the button
     color_dark = (100,100,100)
+
     # stores the width of the
     # screen into a variable
-    width = screen.get_width()
+    width = int(GAME_BOARD_X_SIZE * 0.10)
     # stores the height of the
     # screen into a variable
-    height = screen.get_height()
+    height = GAME_BOARD_Y_SIZE - 250
+
+    x_pos = int(GAME_BOARD_X_SIZE * 0.10)
+    y_pos = GAME_BOARD_Y_SIZE - 250
 
     # defining a font
-    smallfont = pygame.font.SysFont('Corbel',35)
+    smallfont = pygame.font.SysFont('CASTELLAR',40, bold = True)
 
     text = smallfont.render('START GAME' , True , color)
+    text2 = smallfont.render('RULES', True, color)
     pygame.display.set_mode((GAME_BOARD_SIZE))
     # light shade of the button
     color_light = (170,170,170)
-    color = (255,255,255)
-    # dark shade of the button
-    color_dark = (100,100,100)
-    smallfont = pygame.font.SysFont('Corbel',35)
-
-    text = smallfont.render('START GAME' , True , color)
+    # decks_input = pygame.draw.rect(screen(350, 275), (900, 50))
     
     running  = True
     while running:            
@@ -66,27 +68,47 @@ class mainMenu():
             if ev.type == pygame.MOUSEBUTTONDOWN:
                 #if the mouse is clicked on the
                 # button the game is terminated
-                if width/2 <= mouse[0] <= width/2+140 and height/2 <= mouse[1] <= height/2+40:
+                if x_pos + 300 <= mouse[0] <= x_pos + 800 and y_pos + 80 <= mouse[1] <= y_pos + 100:
                     running = False
                     __name__ = "__main__"
+                elif x_pos + 100 <= mouse[0] <= x_pos + 700 and y_pos + 110 <= mouse[1] <= y_pos + 200:
+                    #running = False
+                    scrn = pygame.display.set_mode(RULES_CARD_SIZE)
+                    pygame.display.set_caption('Rules')
+                    imp = pygame.image.load(IMAGE_PATH + "rules.xcf")
+
+                    imp = pygame.transform.scale(imp, (RULES_CARD_SIZE))
+                    scrn.blit(imp, (0, 0))
+                    pygame.display.flip()
+                    status = True
+                    while (status):
+                        for i in pygame.event.get():
+                            if i.type == pygame.QUIT:
+                                status = False
+                    scrn = pygame.display.set_mode(GAME_BOARD_SIZE)
                     
         # fills the screen with a color
-        screen.fill((60,25,60))
+        screen.blit(image_db.get_image(IMAGE_PATH + 'start_game.xcf'), (0, 0))
+        #screen.fill((60,25,60))
         
         # stores the (x,y) coordinates into
         # the variable as a tuple
         mouse = pygame.mouse.get_pos()
-        
+        screen.blit(text ,(x_pos + 400, y_pos + 80))
+        screen.blit(text2 ,(x_pos + 475, y_pos + 130))
         # if mouse is hovered on a button it
         # changes to lighter shade 
-        if width/2 <= mouse[0] <= width/2+140 and height/2 <= mouse[1] <= height/2+40:
-            pygame.draw.rect(screen,color_light,[width/2,height/2,140,40])
+        # if width/2 <= mouse[0] <= width/2+140 and height/2 <= mouse[1] <= height/2+40:
+        #     pygame.draw.rect(screen,color_light,[width/2,height/2,140,40])
             
-        else:
-            pygame.draw.rect(screen,color_dark,[width/2,height/2,140,40])
+        # else:
+        #     pygame.draw.rect(screen,color_dark,[width/2,height/2,140,40])
         
         # superimposing the text onto our button
-        screen.blit(text , (width/2+50,height/2))
+        # screen.blit(text ,(x_pos + 300, y_pos + 100))
+        # screen.blit(text2 ,(x_pos + 675, y_pos + 100))
+        screen.blit(text ,(x_pos + 400, y_pos + 80))
+        screen.blit(text2 ,(x_pos + 475, y_pos + 130))
         
         # updates the frames of the game
         pygame.display.update()
