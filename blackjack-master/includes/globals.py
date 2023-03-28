@@ -53,13 +53,16 @@ DOUBLE_DOWN_BUTTON_FILENAME_OFF = "doubledown_button_blue_fade.xcf"
 UNDO_BET_BUTTON_FILENAME_ON = "undobet_button_blue.xcf"
 UNDO_BET_BUTTON_FILENAME_OFF = "undobet_button_blue_fade.xcf"
 HELP_BUTTON_FILENAME_ON = "help_button_blue.xcf"
+ASSIST_BUTTON_FILENAME_ON = "assist_button.xcf"
 
 
 # All chips images
+CHIP_1_FILENAME_ON = "chip_1_w85h85.xcf"
+CHIP_1_FILENAME_OFF = "chip_1_w85h85_fade.xcf"
 CHIP_5_FILENAME_ON = "chip_5_w85h85.xcf"
 CHIP_5_FILENAME_OFF = "chip_5_w85h85_fade.xcf"
-CHIP_10_FILENAME_ON = "chip_10_w85h85.xcf"
-CHIP_10_FILENAME_OFF = "chip_10_w85h85_fade.xcf"
+CHIP_25_FILENAME_ON = "chip_25_w85h85.xcf"
+CHIP_25_FILENAME_OFF = "chip_25_w85h85_fade.xcf"
 CHIP_50_FILENAME_ON = "chip_50_w85h85.xcf"
 CHIP_50_FILENAME_OFF = "chip_50_w85h85_fade.xcf"
 CHIP_100_FILENAME_ON = "chip_100_w85h85.xcf"

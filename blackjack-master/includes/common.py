@@ -14,6 +14,7 @@ import sys
 import os
 import pygame
 import inspect  # To be used to print function name in log statements
+import sqlite3
 
 # Local imports
 MAIN_DIR = (os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -137,39 +138,47 @@ def plot_chips(screen,
     gap = chips_image_width + GAP_BETWEEN_CHIPS
     image_db = ImageDB.get_instance()
     if visible:
+        if player_cash >= 1:
+            screen.blit(image_db.get_image(IMAGE_PATH_CHIPS + CHIP_1_FILENAME_ON),
+                        (chips_x_pos - 55, chips_y_pos + 152))
         if player_cash >= 5:
+            chips_x_pos += gap
             screen.blit(image_db.get_image(IMAGE_PATH_CHIPS + CHIP_5_FILENAME_ON),
-                        (chips_x_pos - 50, chips_y_pos + 160))
-        if player_cash >= 10:
-            chips_x_pos += gap
-            screen.blit(image_db.get_image(IMAGE_PATH_CHIPS + CHIP_10_FILENAME_ON),
                         (chips_x_pos - 100, chips_y_pos + 95))
-        if player_cash >= 50:
+        if player_cash >= 25:
             chips_x_pos -= gap
             chips_y_pos += gap
+            screen.blit(image_db.get_image(IMAGE_PATH_CHIPS + CHIP_25_FILENAME_ON),
+                        (chips_x_pos + 155, chips_y_pos - 155))
+        if player_cash >= 50:
+            chips_x_pos += gap
             screen.blit(image_db.get_image(IMAGE_PATH_CHIPS + CHIP_50_FILENAME_ON),
-                        (chips_x_pos + 155, chips_y_pos - 155))
+                        (chips_x_pos + 30, chips_y_pos - 265)) 
         if player_cash >= 100:
-            chips_x_pos += gap
+            #chips_x_pos += gap
             screen.blit(image_db.get_image(IMAGE_PATH_CHIPS + CHIP_100_FILENAME_ON),
-                        (chips_x_pos + 60, chips_y_pos - 265))
+                        (chips_x_pos + 60, chips_y_pos - 395))
     else:
+        if player_cash >= 1:
+            screen.blit(image_db.get_image(IMAGE_PATH_CHIPS + CHIP_1_FILENAME_OFF),
+                        (chips_x_pos - 55, chips_y_pos + 157))
         if player_cash >= 5:
-            screen.blit(image_db.get_image(IMAGE_PATH_CHIPS + CHIP_5_FILENAME_OFF),
-                        (chips_x_pos - 50, chips_y_pos + 160))
-        if player_cash >= 10:
             chips_x_pos += gap
-            screen.blit(image_db.get_image(IMAGE_PATH_CHIPS + CHIP_10_FILENAME_OFF),
+            screen.blit(image_db.get_image(IMAGE_PATH_CHIPS + CHIP_5_FILENAME_OFF),
                         (chips_x_pos - 100, chips_y_pos + 95))
-        if player_cash >= 50:
+        if player_cash >= 25:
             chips_x_pos -= gap
             chips_y_pos += gap
-            screen.blit(image_db.get_image(IMAGE_PATH_CHIPS + CHIP_50_FILENAME_OFF),
+            screen.blit(image_db.get_image(IMAGE_PATH_CHIPS + CHIP_25_FILENAME_OFF),
                         (chips_x_pos + 155, chips_y_pos - 155))
-        if player_cash >= 100:
+        if player_cash >= 50:
             chips_x_pos += gap
+            screen.blit(image_db.get_image(IMAGE_PATH_CHIPS + CHIP_50_FILENAME_OFF),
+                        (chips_x_pos + 45, chips_y_pos - 270))
+        if player_cash >= 100:
+            #chips_x_pos += gap
             screen.blit(image_db.get_image(IMAGE_PATH_CHIPS + CHIP_100_FILENAME_OFF),
-                        (chips_x_pos + 60, chips_y_pos - 265))
+                        (chips_x_pos + 60, chips_y_pos - 400))
 
 
 def plot_bets(screen, player_bets):
@@ -191,7 +200,7 @@ def plot_bets(screen, player_bets):
     chip_y_pos = 360
     for bet in player_bets:
         for chip in bet:
-            screen.blit(image_db.get_image(IMAGE_PATH_CHIPS + 'chip_{0}_w85h85.png'.format(chip)),
+            screen.blit(image_db.get_image(IMAGE_PATH_CHIPS + 'chip_{0}_w85h85.xcf'.format(chip)),
                         (chip_x_pos + 630, chip_y_pos + 70))
             chip_y_pos += 8
         chip_y_pos = 360
@@ -263,6 +272,11 @@ def plot_buttons(screen, button_status):
     if button_status.help is True:
         screen.blit(image_db.get_image(IMAGE_PATH_BUTTONS + HELP_BUTTON_FILENAME_ON),
                     (button_x_pos - 105, button_y_pos - 15))
+    button_x_pos += GAP_BETWEEN_BUTTONS
+    
+    if button_status.assist is True:
+        screen.blit(image_db.get_image(IMAGE_PATH_BUTTONS + ASSIST_BUTTON_FILENAME_ON),
+                    (button_x_pos - 890, button_y_pos - 15))
 
 
 # def plot_status_box(screen, text_font, player_cash, game_rounds):
@@ -379,6 +393,108 @@ def get_value_of_dealers_hand(hand):
             logging.debug(inspect.stack()[0][3] + ': toggle hard to soft ace')
 
     return summary
+
+def dbQuery(pcards, dcards):
+
+    #logging.debug(inspect.stack()[0][3] + ': enter')
+
+    pvalue = ""
+    dvalue = ""
+    qvalue = ""
+
+    #Get rank of the player's cards and the dealer's second card
+    pcard1 = pcards[0].get_rank()
+    print("pcard1 = "+str(pcard1))
+    pcard2 = pcards[1].get_rank()
+    print("pcard2 = "+str(pcard2))
+    dcard2 = dcards[1].get_rank()
+    print("dcard2 = "+str(dcard2))
+
+    if pcard1 > 10:
+        pcard1 = 10
+        print("pcard1 is a face card and will be counted as 10")
+
+    if pcard2 > 10:
+        pcard2 = 10
+        print("pcard2 is a face card and will be counted as 10")
+
+    if pcard1 == 1 and pcard2 == 1:
+        pvalue = "AA"
+    elif pcard1 == 1 and pcard2 != 1:
+        pvalue = "A"+str(pcard2)
+    elif pcard1 != 1 and pcard2 == 1:
+        pvalue = "A"+str(pcard1)
+    elif pcard1 == pcard2:
+        pvalue = str(pcard1)+str(pcard2)
+    else:
+        value = pcard1 + pcard2
+
+        if value < 8:
+            qvalue = "H"
+            print("Total value < 8, no need to query the database")
+        elif value >= 17:
+            qvalue = "S"
+            print("Total value > 17, no need to query the database")
+        else:
+            pvalue = str(value)
+
+    if dcard2 >= 10:
+        dvalue = "ten"
+        print("dcard2 is a facecard and will be counted as 10")
+    elif dcard2 == 1:
+        dvalue = "A"
+    elif dcard2 == 2:
+        dvalue = "two"
+    elif dcard2 == 3:
+        dvalue = "three"
+    elif dcard2 == 4:
+        dvalue = "four"
+    elif dcard2 == 5:
+        dvalue = "five"
+    elif dcard2 == 6:
+        dvalue = "six"
+    elif dcard2 == 7:
+        dvalue = "seven"
+    elif dcard2 == 8:
+        dvalue = "eight"
+    elif dcard2 == 9:
+        dvalue = "nine"
+
+    if qvalue == "":
+
+        try:
+            sqliteConnection = sqlite3.connect('StrategyDB.db')
+            cursor = sqliteConnection.cursor()
+            print("Database created and Successfully Connected to SQLite")
+
+            sqlite_select_Query = "select sqlite_version();"
+            cursor.execute(sqlite_select_Query)
+            record = cursor.fetchall()
+            print("SQLite Database Version is: ", record)
+
+
+            cursor.execute("select "+dvalue+" from scard where phand = '"+pvalue+"'")
+            record2 = cursor.fetchall()
+            qvalue = record2[0][0]
+            print("This command works and the item is: ", qvalue)
+            cursor.close()
+
+        except sqlite3.Error as error:
+
+            print("Error while connecting to sqlite", error)
+
+        finally:
+
+            if sqliteConnection:
+
+                sqliteConnection.close()
+                print("The SQLite connection is closed")
+
+    return qvalue
+
+
+
+    
 
 
 def is_cut_passed(shoe_of_decks):
@@ -671,6 +787,11 @@ class ButtonCollideArea:
                                                    button_y_pos - 7,
                                                    common_vars.button_image_width,
                                                    common_vars.button_image_height)
+        button_x_pos += GAP_BETWEEN_BUTTONS
+        self.assist_button_area = pygame.Rect(button_x_pos - 890,
+                                                   button_y_pos - 7,
+                                                   common_vars.button_image_width,
+                                                   common_vars.button_image_height)
 
 
 class ChipsCollideArea:
@@ -708,24 +829,29 @@ class ChipsCollideArea:
         logging.info(inspect.stack()[0][3] + ':' + 'ChipsCollideArea instance created')
         chips_x_pos, chips_y_pos = CHIPS_START_POS
         gap = common_vars.chips_image_width + GAP_BETWEEN_CHIPS
-        self.chip_5_area = pygame.Rect(chips_x_pos - 50,
-                                       chips_y_pos + 160,
+        self.chip_1_area = pygame.Rect(chips_x_pos - 55,
+                                       chips_y_pos + 152,
                                        common_vars.chips_image_width,
                                        common_vars.chips_image_height)
         chips_x_pos += gap
-        self.chip_10_area = pygame.Rect(chips_x_pos - 100,
+        self.chip_5_area = pygame.Rect(chips_x_pos - 100,
                                         chips_y_pos + 95,
                                         common_vars.chips_image_width,
                                         common_vars.chips_image_height)
         chips_x_pos -= gap
         chips_y_pos += gap
-        self.chip_50_area = pygame.Rect(chips_x_pos + 155,
+        self.chip_25_area = pygame.Rect(chips_x_pos + 155,
                                         chips_y_pos - 155,
                                         common_vars.chips_image_width,
                                         common_vars.chips_image_height)
         chips_x_pos += gap
-        self.chip_100_area = pygame.Rect(chips_x_pos + 60,
+        self.chip_50_area = pygame.Rect(chips_x_pos + 30,
                                         chips_y_pos - 265,
+                                        common_vars.chips_image_width,
+                                        common_vars.chips_image_height)
+        #chips_x_pos += gap
+        self.chip_100_area = pygame.Rect(chips_x_pos + 55,
+                                        chips_y_pos - 410,
                                         common_vars.chips_image_width,
                                         common_vars.chips_image_height)
 
@@ -806,7 +932,7 @@ class ButtonStatus:
     def __init__(self):
         """
         Instantiate a singleton object with all attributes set to False.
-        Help button always available
+        Help / assist buttons always available
 
         """
         self.start = False
@@ -817,11 +943,12 @@ class ButtonStatus:
         self.split = False
         self.double_down = False
         self.help = True
+        self.assist = True
 
     def reset(self):
         """
         Set all class attributes value to False.
-        Help button always available
+        Help / assist buttons always available 
 
         :return: None
 
@@ -834,3 +961,4 @@ class ButtonStatus:
         self.split = False
         self.double_down = False
         self.help = True
+        self.assist = True

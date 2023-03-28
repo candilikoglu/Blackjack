@@ -199,16 +199,21 @@ class BettingState(State):
 
                     if len(self._current_bet) < 14:
                         self._chips_visible = True
-                        if chips_collide_instance.chip_5_area.collidepoint(mouse_position[0], mouse_position[1]) \
+                        if chips_collide_instance.chip_1_area.collidepoint(mouse_position[0], mouse_position[1]) \
+                                and common_vars.player_cash >= 1:
+                            chip_sound.play()
+                            self._current_bet.append(1)
+                            common_vars.player_cash -= 1
+                        elif chips_collide_instance.chip_5_area.collidepoint(mouse_position[0], mouse_position[1]) \
                                 and common_vars.player_cash >= 5:
                             chip_sound.play()
                             self._current_bet.append(5)
                             common_vars.player_cash -= 5
-                        elif chips_collide_instance.chip_10_area.collidepoint(mouse_position[0], mouse_position[1]) \
-                                and common_vars.player_cash >= 10:
+                        elif chips_collide_instance.chip_25_area.collidepoint(mouse_position[0], mouse_position[1]) \
+                                and common_vars.player_cash >= 25:
                             chip_sound.play()
-                            self._current_bet.append(10)
-                            common_vars.player_cash -= 10
+                            self._current_bet.append(25)
+                            common_vars.player_cash -= 25
                         elif chips_collide_instance.chip_50_area.collidepoint(mouse_position[0], mouse_position[1]) \
                                 and common_vars.player_cash >= 50:
                             chip_sound.play()
@@ -295,6 +300,7 @@ class DealingState(State):
             # BlackJack, Tie or possible Split.
             logging.info(type(self).__name__ + ': Two cards dealt, first evaluation')
             common_vars.pause_time = 0
+            dbQuery(common_vars.player_hands[first_hand], common_vars.dealer_cards)
             value_of_dealers_hand = get_value_of_dealers_hand(common_vars.dealer_cards)
             for hand in common_vars.player_hands:
                 value_of_players_hand = get_value_of_players_hand(hand)
@@ -380,21 +386,44 @@ class DealingState(State):
                     self.next_state(SplitState)
                 elif button_status.help and button_collide_instance.help_button_area.\
                         collidepoint(mouse_position[0], mouse_position[1]):
-                    scrn = pygame.display.set_mode(STRATEGY_CARD_SIZE)
-                    pygame.display.set_caption('image')
-                    imp = pygame.image.load(IMAGE_PATH + "strategy_card.xcf")
+                                    
+                        scrn = pygame.display.set_mode(STRATEGY_CARD_SIZE)
+                        pygame.display.set_caption('image')
+                        imp = pygame.image.load(IMAGE_PATH + "strategy_card.xcf")
 
-                    imp = pygame.transform.scale(imp, (STRATEGY_CARD_SIZE))
+                        imp = pygame.transform.scale(imp, (STRATEGY_CARD_SIZE))
 
-                    scrn.blit(imp, (0, 0))
-                    pygame.display.flip()
-                    status = True
-                    while (status):
-                        for i in pygame.event.get():
-                            if i.type == pygame.QUIT:
-                                status = False
-                    scrn = pygame.display.set_mode(GAME_BOARD_SIZE)
-                    #scrn = pygame.display.set_mode((800, 600))
+                        scrn.blit(imp, (0, 0))
+                        pygame.display.flip()
+                        status = True
+                        while (status):
+                            for i in pygame.event.get():
+                                if i.type == pygame.QUIT:
+                                    status = False
+                        scrn = pygame.display.set_mode(GAME_BOARD_SIZE)
+
+                elif button_status.assist and button_collide_instance.assist_button_area.\
+                        collidepoint(mouse_position[0], mouse_position[1]):
+                    dbq = dbQuery(common_vars.player_hands[first_hand], common_vars.dealer_cards)
+                    x_pos, y_pos = STATUS_START_POS
+                    if dbq == "S":
+                        message4 = common_vars.text_font.render('[You should Stand here ]', False, YELLOW_COLOR)
+                        pygame.display.update(common_vars.screen.blit(message4, (x_pos, y_pos + 100)))
+                        pygame.time.delay(5000)
+                    elif dbq == "H":
+                        message4 = common_vars.text_font.render('You should Hit here  ]', False, YELLOW_COLOR)
+                        pygame.display.update(common_vars.screen.blit(message4, (x_pos, y_pos + 100)))
+                        pygame.time.delay(5000)
+                    elif dbq == "P":
+                        message4 = common_vars.text_font.render('You should Split here  ]', False, YELLOW_COLOR)
+                        pygame.display.update(common_vars.screen.blit(message4, (x_pos, y_pos + 100)))
+                        pygame.time.delay(5000)
+                    elif dbq == "D":
+                        message4 = common_vars.text_font.render('You should double down here ]', False, YELLOW_COLOR)
+                        pygame.display.update(common_vars.screen.blit(message4, (x_pos, y_pos + 100)))
+                        pygame.time.delay(5000)
+                    else:
+                        continue
 
         plot_bets(common_vars.screen, common_vars.player_bets)
 
@@ -472,6 +501,28 @@ class SplitState(State):
                                     if i.type == pygame.QUIT:
                                         status = False
                             scrn = pygame.display.set_mode(GAME_BOARD_SIZE)
+                elif button_status.assist and button_collide_instance.assist_button_area.\
+                        collidepoint(mouse_position[0], mouse_position[1]):
+                    dbq = dbQuery(common_vars.player_hands[first_hand], common_vars.dealer_cards)
+                    x_pos, y_pos = STATUS_START_POS
+                    if dbq == "S":
+                        message4 = common_vars.text_font.render('[You should Stand here ]', False, YELLOW_COLOR)
+                        pygame.display.update(common_vars.screen.blit(message4, (x_pos, y_pos + 100)))
+                        pygame.time.delay(5000)
+                    elif dbq == "H":
+                        message4 = common_vars.text_font.render('You should Hit here  ]', False, YELLOW_COLOR)
+                        pygame.display.update(common_vars.screen.blit(message4, (x_pos, y_pos + 100)))
+                        pygame.time.delay(5000)
+                    elif dbq == "P":
+                        message4 = common_vars.text_font.render('You should Split here  ]', False, YELLOW_COLOR)
+                        pygame.display.update(common_vars.screen.blit(message4, (x_pos, y_pos + 100)))
+                        pygame.time.delay(5000)
+                    elif dbq == "D":
+                        message4 = common_vars.text_font.render('You should double down here ]', False, YELLOW_COLOR)
+                        pygame.display.update(common_vars.screen.blit(message4, (x_pos, y_pos + 100)))
+                        pygame.time.delay(5000)
+                    else:
+                        continue
 
         if len(common_vars.player_hands[second_hand]) != 2:
             # Fill up each hand with one additional card
@@ -575,6 +626,7 @@ class PlayerHitState(State):
 
         sound_db = SoundDB.get_instance()
         card_sound = sound_db.get_sound(SOUND_PATH + 'cardslide.wav')
+        first_hand = 0
 
         num_of_hands = len(common_vars.player_hands)
         if num_of_hands == 2:
@@ -676,6 +728,30 @@ class PlayerHitState(State):
                                 if i.type == pygame.QUIT:
                                     status = False
                         scrn = pygame.display.set_mode(GAME_BOARD_SIZE)
+                    elif button_status.assist and button_collide_instance.assist_button_area.\
+                        collidepoint(mouse_position[0], mouse_position[1]):
+                        dbq = dbQuery(common_vars.player_hands[first_hand], common_vars.dealer_cards)
+                        x_pos, y_pos = STATUS_START_POS
+                        if dbq == "S":
+                            message4 = common_vars.text_font.render('[You should Stand here ]', False, YELLOW_COLOR)
+                            pygame.display.update(common_vars.screen.blit(message4, (x_pos, y_pos + 100)))
+                            pygame.time.delay(5000)
+                        elif dbq == "H":
+                            message4 = common_vars.text_font.render('You should Hit here  ]', False, YELLOW_COLOR)
+                            pygame.display.update(common_vars.screen.blit(message4, (x_pos, y_pos + 100)))
+                            pygame.time.delay(5000)
+                        elif dbq == "P":
+                            message4 = common_vars.text_font.render('You should Split here  ]', False, YELLOW_COLOR)
+                            pygame.display.update(common_vars.screen.blit(message4, (x_pos, y_pos + 100)))
+                            pygame.time.delay(5000)
+                        elif dbq == "D":
+                            message4 = common_vars.text_font.render('You should double down here ]', False, YELLOW_COLOR)
+                            pygame.display.update(common_vars.screen.blit(message4, (x_pos, y_pos + 100)))
+                            pygame.time.delay(5000)
+                        else:
+                            continue
+                    
+                
 
         plot_bets(common_vars.screen, common_vars.player_bets)
 

@@ -16,10 +16,10 @@ import time
 from includes.blackjackfsm import *
 
 # Specialized imports from lib. Add lib to path
-# import os
-# import sys
-# MAIN_DIR = (os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-# sys.path.insert(1, os.path.join(MAIN_DIR, 'lib'))
+import os
+import sys
+MAIN_DIR = (os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(1, os.path.join(MAIN_DIR, 'lib'))
 
 __name__ = "__mainMenu__"
 class mainMenu():
@@ -46,13 +46,13 @@ class mainMenu():
     height = GAME_BOARD_Y_SIZE - 250
 
     x_pos = int(GAME_BOARD_X_SIZE * 0.10)
-    y_pos = GAME_BOARD_Y_SIZE - 250
+    y_pos = GAME_BOARD_Y_SIZE - 250                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
 
     # defining a font
     smallfont = pygame.font.SysFont('CASTELLAR',40, bold = True)
 
-    text = smallfont.render('START GAME' , True , color)
-    text2 = smallfont.render('RULES', True, color)
+    #text = smallfont.render('START GAME' , True , color)
+    text2 = smallfont.render('GAME RULES', True, color)
     pygame.display.set_mode((GAME_BOARD_SIZE))
     # light shade of the button
     color_light = (170,170,170)
@@ -68,10 +68,10 @@ class mainMenu():
             if ev.type == pygame.MOUSEBUTTONDOWN:
                 #if the mouse is clicked on the
                 # button the game is terminated
-                if x_pos + 300 <= mouse[0] <= x_pos + 800 and y_pos + 80 <= mouse[1] <= y_pos + 100:
+                if x_pos + 250 <= mouse[0] <= x_pos + 950 and y_pos + 50 <= mouse[1] <= y_pos + 90:
                     running = False
                     __name__ = "__main__"
-                elif x_pos + 100 <= mouse[0] <= x_pos + 700 and y_pos + 110 <= mouse[1] <= y_pos + 200:
+                elif x_pos + 300 <= mouse[0] <= x_pos + 750 and y_pos + 100 <= mouse[1] <= y_pos + 140:
                     #running = False
                     scrn = pygame.display.set_mode(RULES_CARD_SIZE)
                     pygame.display.set_caption('Rules')
@@ -94,8 +94,8 @@ class mainMenu():
         # stores the (x,y) coordinates into
         # the variable as a tuple
         mouse = pygame.mouse.get_pos()
-        screen.blit(text ,(x_pos + 400, y_pos + 80))
-        screen.blit(text2 ,(x_pos + 475, y_pos + 130))
+        #screen.blit(text ,(x_pos + 400, y_pos + 80))
+        screen.blit(text2 ,(x_pos + 410, y_pos + 112))
         # if mouse is hovered on a button it
         # changes to lighter shade 
         # if width/2 <= mouse[0] <= width/2+140 and height/2 <= mouse[1] <= height/2+40:
@@ -104,11 +104,6 @@ class mainMenu():
         # else:
         #     pygame.draw.rect(screen,color_dark,[width/2,height/2,140,40])
         
-        # superimposing the text onto our button
-        # screen.blit(text ,(x_pos + 300, y_pos + 100))
-        # screen.blit(text2 ,(x_pos + 675, y_pos + 100))
-        screen.blit(text ,(x_pos + 400, y_pos + 80))
-        screen.blit(text2 ,(x_pos + 475, y_pos + 130))
         
         # updates the frames of the game
         pygame.display.update()
